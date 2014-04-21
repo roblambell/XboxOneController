@@ -14,7 +14,7 @@
     <ProjectGuid>{9B03EAB4-2FA3-4024-8D22-50EF9E6D394D}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>XboxOneControllerforWindows</RootNamespace>
-    <ProjectName>Xbox One Controller</ProjectName>
+    <ProjectName>Sample App</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
