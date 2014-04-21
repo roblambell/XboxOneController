@@ -19,8 +19,8 @@
 
 struct usb_bus *busses;
 struct usb_bus *bus;
-struct usb_device* dev;
-struct usb_dev_handle* handle;
+struct usb_device *dev;
+struct usb_dev_handle *handle;
 
 static unsigned short idVendor  = 0x045E;
 static unsigned short idProduct = 0x02D1;
@@ -45,10 +45,6 @@ struct XboxOneControllerState
 	short thumbRY;
 };
 
-int iround(double num) {
-	return (num > 0.0) ? (int)floor(num + 0.5) : (int)ceil(num - 0.5);
-}
-
 void vibrate(int leftTriggerVal, int rightTriggerVal, int leftVal, int rightVal)
 {
 	unsigned char data[] = {9, 0, 0, 9, 0, 15, leftTriggerVal, rightTriggerVal, leftVal, rightVal, 255, 0, 0};
@@ -58,23 +54,23 @@ void vibrate(int leftTriggerVal, int rightTriggerVal, int leftVal, int rightVal)
 	}
 }
 
-void decode(char* data)
+void decode(char *data)
 {	
-	XboxOneControllerState* controllerState = (XboxOneControllerState *) data;
+	XboxOneControllerState *controllerState = (XboxOneControllerState*)data;
 
-	char* buttons1_index[] = {"Sync", "Unknown", "Menu", "View", "A", "B", "X", "Y"};
+	char *buttons1_index[] = {"Sync", "Unknown", "Menu", "View", "A", "B", "X", "Y"};
 	for(int i = 0; i < 8; ++i)
 	{
-		if((controllerState->buttons1 & (1 << i)) != 0)
+		if((controllerState->buttons1&(1 << i)) != 0)
 		{
 			std::cout << buttons1_index[i] << "\n";
 		}
 	}
 
-	char* buttons2_index[] = {"Up", "Down", "Left", "Right", "Left Shoulder", "Right Shoulder", "Left Stick (Pressed)", "Right Stick (Pressed)"};
+	char *buttons2_index[] = {"Up", "Down", "Left", "Right", "Left Shoulder", "Right Shoulder", "Left Stick (Pressed)", "Right Stick (Pressed)"};
 	for(int i = 0; i < 8; ++i)
 	{
-		if((controllerState->buttons2 & (1 << i)) != 0)
+		if((controllerState->buttons2&(1 << i)) != 0)
 		{
 			std::cout << buttons2_index[i] << "\n";
 		}
@@ -103,7 +99,7 @@ void decode(char* data)
 	}
 }
 
-int main(int argc, char** argv)
+int main(int argc, char **argv)
 {
 
     usb_init();
@@ -145,13 +141,13 @@ int main(int argc, char** argv)
 
 				std::cout << "Initialised Xbox One Controller\n\n";
 
-				std::cout << "Shake it! ";
+				std::cout << "Shake it ";
 				// Motors are 0 - 255
 				vibrate(50, 50, 50, 50);
 				Sleep(500);
 				vibrate(0, 0, 0, 0);
 
-				std::cout << "then Listen - Press any key to exit.\n\n";
+				std::cout << "and Listen - Press any key to exit.\n\n";
 				
 				bool receive_data = true;
 				while(receive_data)
@@ -179,7 +175,7 @@ int main(int argc, char** argv)
 					switch(tag)
 					{
 						case 0x07:
-							if((data[2] & 0x01) != 0){
+							if((data[2]&0x01) != 0){
 								std::cout << "Guide\n";
 							}
 							break;
