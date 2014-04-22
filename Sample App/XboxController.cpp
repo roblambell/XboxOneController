@@ -37,9 +37,9 @@ struct XboxOneControllerState
 	char unknown;
 	char buttons1;
 	char buttons2;
-	short leftTrigger;
+	short leftTrigger;  // Triggers are 0 - 1023
 	short rightTrigger;
-	short thumbLX;
+	short thumbLX;      // Axes are -32767 - 32767
 	short thumbLY;
 	short thumbRX;
 	short thumbRY;
@@ -47,6 +47,7 @@ struct XboxOneControllerState
 
 void vibrate(int leftTriggerVal, int rightTriggerVal, int leftVal, int rightVal)
 {
+	// Motors are 0 - 255
 	unsigned char data[] = {9, 0, 0, 9, 0, 15, leftTriggerVal, rightTriggerVal, leftVal, rightVal, 255, 0, 0};
 	if(usb_interrupt_write(handle, endpointOut, (char*)data, sizeof(data), timeout) < 0)
 	{
@@ -175,7 +176,8 @@ int main(int argc, char **argv)
 					switch(tag)
 					{
 						case 0x07:
-							if((data[2]&0x01) != 0){
+							if((data[2]&0x01) != 0)
+							{
 								std::cout << "Guide\n";
 							}
 							break;
