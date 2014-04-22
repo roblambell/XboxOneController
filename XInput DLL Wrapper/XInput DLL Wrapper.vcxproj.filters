@@ -24,6 +24,9 @@
     <ClInclude Include="lusb0_usb.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="XInput_XboxOne.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -32,7 +35,7 @@
     <ClCompile Include="dllmain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="XInputWrapper.cpp">
+    <ClCompile Include="XInput_XboxOne.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -40,5 +43,10 @@
     <Library Include="libusb.lib">
       <Filter>Resource Files</Filter>
     </Library>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="XInput_XboxOne.def">
+      <Filter>Source Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

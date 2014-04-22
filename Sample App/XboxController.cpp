@@ -31,6 +31,7 @@ int endpointIn     = 0x81;
 int endpointOut    = 0x01;
 int timeout        = 5000; // milliseconds
 
+// Structure we receive from the controller
 struct XboxOneControllerState
 {
 	char eventCount;
