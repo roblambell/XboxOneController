@@ -10,7 +10,7 @@ To Swizzy and Lucas Assis for vibration https://www.youtube.com/watch?v=6bCEK71U
 Instructions
 ------------
 1\. [Download the latest release](https://github.com/badgio/XboxOneController/releases)  
-2\. Install the driver (or get it from http://sourceforge.net/apps/trac/libusb-win32/wiki)
+2\. Install the driver (or get it from http://sourceforge.net/apps/trac/libusb-win32/wiki)  
 3\. Place xinput1_3.dll in to same directory as the game executable
 
 May need to rename to one of the following:
