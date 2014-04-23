@@ -272,9 +272,10 @@ DWORD WINAPI XInputSetState
 
 	if(isConnected && dwUserIndex == 0)
 	{
-		int leftVal = pVibration->wLeftMotorSpeed;
-		int rightVal = pVibration->wRightMotorSpeed;
-			
+		// We're receiving as XInput [0 ~ 65535], need to be [0 ~ 255] !!
+		int leftVal = iround(((float)pVibration->wLeftMotorSpeed / 65535) * 255);
+		int rightVal = iround(((float)pVibration->wRightMotorSpeed / 65535) * 255);
+					
 		vibrate(0, 0, leftVal, rightVal);
 
 		return ERROR_SUCCESS;
