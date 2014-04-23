@@ -143,7 +143,14 @@ bool updateState()
 	return true;
 }
 
-void vibrate(int leftTriggerVal, int rightTriggerVal, int leftVal, int rightVal)
+void vibrate(int leftVal, int rightVal)
+{
+	// Motors are 0 - 255
+	unsigned char data[] = {9, 0, 0, 9, 0, 15, 0, 0, leftVal, rightVal, 255, 0, 0};
+	usb_interrupt_write(handle, endpointOut, (char*)data, sizeof(data), timeout);
+}
+
+void vibrateEx(int leftTriggerVal, int rightTriggerVal, int leftVal, int rightVal)
 {
 	// Motors are 0 - 255
 	unsigned char data[] = {9, 0, 0, 9, 0, 15, leftTriggerVal, rightTriggerVal, leftVal, rightVal, 255, 0, 0};
@@ -272,12 +279,13 @@ DWORD WINAPI XInputSetState
 
 	if(isConnected && dwUserIndex == 0)
 	{
-		int leftTriggerVal = pVibration->wLeftTriggerMotorSpeed;
-		int rightTriggerVal = pVibration->wLeftTriggerMotorSpeed;
+		//int leftTriggerVal = pVibration->wLeftTriggerMotorSpeed;
+		//int rightTriggerVal = pVibration->wLeftTriggerMotorSpeed;
 		int leftVal = pVibration->wLeftMotorSpeed;
 		int rightVal = pVibration->wRightMotorSpeed;
 			
-		vibrate(leftTriggerVal, rightTriggerVal, leftVal, rightVal);
+		//vibrate(leftTriggerVal, rightTriggerVal, leftVal, rightVal);
+		vibrate(leftVal, rightVal);
 
 		return ERROR_SUCCESS;
 	}
@@ -470,3 +478,30 @@ DWORD WINAPI XInputGetStateEx(DWORD dwUserIndex, XINPUT_STATE* pState)
 	}
 }
 
+DWORD WINAPI XInputSetStateEx
+(
+    __in DWORD             dwUserIndex,						// Index of the gamer associated with the device
+    __in XINPUT_VIBRATION_EX* pVibration					// The vibration information to send to the controller
+)
+{
+	if(!isConnected)
+	{
+		connectController(true);
+	}
+
+	if(isConnected && dwUserIndex == 0)
+	{
+		int leftTriggerVal = pVibration->wLeftTriggerMotorSpeed;
+		int rightTriggerVal = pVibration->wLeftTriggerMotorSpeed;
+		int leftVal = pVibration->wLeftMotorSpeed;
+		int rightVal = pVibration->wRightMotorSpeed;
+			
+		vibrateEx(leftTriggerVal, rightTriggerVal, leftVal, rightVal);
+
+		return ERROR_SUCCESS;
+	}
+	else
+	{
+		return ERROR_DEVICE_NOT_CONNECTED;
+	}
+}

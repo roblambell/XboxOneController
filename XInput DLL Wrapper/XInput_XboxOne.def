@@ -12,3 +12,4 @@ EXPORTS
 
 	; Undocumented
 	XInputGetStateEx				@100
+	XInputSetStateEx				@104

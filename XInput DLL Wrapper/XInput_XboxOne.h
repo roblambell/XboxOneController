@@ -115,27 +115,19 @@ typedef struct _XINPUT_STATE
     XINPUT_GAMEPAD                      Gamepad;
 } XINPUT_STATE, *PXINPUT_STATE;
 
-typedef struct _XINPUT_STATE_EX
-{
-	LONG								eventCount;
-	SHORT								up, down, left, right, start, back, leftThumb, 
-										rightThumb, leftShoulder, rightShoulder, guideButton, 
-										unknown, aButton, bButton, xButton, yButton;
-    BYTE                                bLeftTrigger;
-    BYTE                                bRightTrigger;
-    SHORT                               sThumbLX;
-    SHORT                               sThumbLY;
-    SHORT                               sThumbRX;
-    SHORT                               sThumbRY;
-} XINPUT_STATE_EX, *PXINPUT_STATE_EX;
-
 typedef struct _XINPUT_VIBRATION
+{
+    WORD                                wLeftMotorSpeed;
+    WORD                                wRightMotorSpeed;
+} XINPUT_VIBRATION, *PXINPUT_VIBRATION;
+
+typedef struct _XINPUT_VIBRATION_EX
 {
     WORD                                wLeftMotorSpeed;
     WORD                                wRightMotorSpeed;
     WORD                                wLeftTriggerMotorSpeed;
     WORD                                wRightTriggerMotorSpeed;
-} XINPUT_VIBRATION, *PXINPUT_VIBRATION;
+} XINPUT_VIBRATION_EX, *PXINPUT_VIBRATION_EX;
 
 typedef struct _XINPUT_CAPABILITIES
 {
