@@ -63,7 +63,7 @@ void writeLog(char *tag, char *format, ...)
 	{
 		time(&now);
 		ctime_s(timeArray, 128, &now);
-		timeArray[strlen(timeArray) - 2] = 0x00;
+		timeArray[strlen(timeArray) - 1] = 0x00;
 		fprintf(stream, "%s [%s]: ", timeArray, tag);
 
 		va_start(args, format);
