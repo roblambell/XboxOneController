@@ -359,8 +359,8 @@ __out XINPUT_CAPABILITIES* pCapabilities				// Receives the capabilities
 
 	if (controllerInit && dwUserIndex >= 0 && dwUserIndex < 4 && controllerHandler[dwUserIndex])
 	{
-		pCapabilities->Flags = 0;
-		pCapabilities->Type = 0;//XINPUT_DEVTYPE_GAMEPAD;
+		pCapabilities->Flags = XINPUT_CAPS_VOICE_SUPPORTED;
+		pCapabilities->Type = XINPUT_DEVTYPE_GAMEPAD;
 		pCapabilities->SubType = XINPUT_DEVSUBTYPE_GAMEPAD;
 
 		pCapabilities->Gamepad.wButtons = 0xF3FF;
@@ -371,7 +371,7 @@ __out XINPUT_CAPABILITIES* pCapabilities				// Receives the capabilities
 		pCapabilities->Gamepad.sThumbLX =
 			pCapabilities->Gamepad.sThumbLY =
 			pCapabilities->Gamepad.sThumbRX =
-			pCapabilities->Gamepad.sThumbRY = (SHORT)-64;
+			pCapabilities->Gamepad.sThumbRY = (SHORT)0xFFC0;
 
 		pCapabilities->Vibration.wLeftMotorSpeed =
 			pCapabilities->Vibration.wRightMotorSpeed = 0xFF;
