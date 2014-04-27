@@ -81,7 +81,7 @@ int iround(double num) {
 
 bool updateState(int dwUserIndex)
 {
-	writeLog("updateState", "start\n");
+	writeLog("updateState", "start dwUserIndex = %d\n", dwUserIndex);
 	uint8_t raw_data[64];
 
 	int ret = usb_interrupt_read(controllerHandler[dwUserIndex]->handle, endpointIn, (char*)raw_data, sizeof(raw_data), timeout);
