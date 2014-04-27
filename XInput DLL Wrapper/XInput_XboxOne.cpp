@@ -30,7 +30,7 @@ int configuration = 1;
 int interface = 0;
 int endpointIn = 0x81;
 int endpointOut = 0x01;
-int timeout = 5000; // milliseconds
+int timeout = 1; // milliseconds 
 bool controllerInit = false;
 
 // Structure we receive from the controller
@@ -86,6 +86,7 @@ bool updateState(int dwUserIndex)
 	int ret = usb_interrupt_read(controllerHandler[dwUserIndex]->handle, endpointIn, (char*)raw_data, sizeof(raw_data), timeout);
 	if (ret < 0)
 	{
+		writeLog("updateState", "usb_interrupt_read fail error = %d dwUserIndex = %d\n", ret, dwUserIndex);
 		return false;
 	}
 
@@ -173,7 +174,6 @@ bool updateState(int dwUserIndex)
 		controllerHandler[dwUserIndex]->controllerState.thumbLY = reportedState->thumbLY;
 		controllerHandler[dwUserIndex]->controllerState.thumbRX = reportedState->thumbRX;
 		controllerHandler[dwUserIndex]->controllerState.thumbRY = reportedState->thumbRY;
-
 		break;
 	}
 	writeLog("updateState", "stop\n");
