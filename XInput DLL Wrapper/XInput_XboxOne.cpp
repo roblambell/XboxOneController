@@ -128,32 +128,6 @@ DWORD WINAPI updateState(void* dwUserIndexPointer)
 				i++;
 			}
 
-			controllerHandler[dwUserIndex]->controllerState.guideButton = 0;
-
-			controllerHandler[dwUserIndex]->controllerState.menu = 0;
-			controllerHandler[dwUserIndex]->controllerState.view = 0;
-			controllerHandler[dwUserIndex]->controllerState.aButton = 0;
-			controllerHandler[dwUserIndex]->controllerState.bButton = 0;
-			controllerHandler[dwUserIndex]->controllerState.xButton = 0;
-			controllerHandler[dwUserIndex]->controllerState.yButton = 0;
-
-			controllerHandler[dwUserIndex]->controllerState.up = 0;
-			controllerHandler[dwUserIndex]->controllerState.down = 0;
-			controllerHandler[dwUserIndex]->controllerState.left = 0;
-			controllerHandler[dwUserIndex]->controllerState.right = 0;
-			controllerHandler[dwUserIndex]->controllerState.leftShoulder = 0;
-			controllerHandler[dwUserIndex]->controllerState.rightShoulder = 0;
-			controllerHandler[dwUserIndex]->controllerState.leftThumb = 0;
-			controllerHandler[dwUserIndex]->controllerState.rightThumb = 0;
-
-			controllerHandler[dwUserIndex]->controllerState.leftTrigger = 0;
-			controllerHandler[dwUserIndex]->controllerState.rightTrigger = 0;
-
-			controllerHandler[dwUserIndex]->controllerState.thumbLX = 0;
-			controllerHandler[dwUserIndex]->controllerState.thumbLY = 0;
-			controllerHandler[dwUserIndex]->controllerState.thumbRX = 0;
-			controllerHandler[dwUserIndex]->controllerState.thumbRY = 0;
-
 			switch (tag)
 			{
 			case 0x07:
