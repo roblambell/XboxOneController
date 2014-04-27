@@ -92,15 +92,15 @@ int iround(double num) {
 DWORD WINAPI updateState(void* dwUserIndexPointer)
 {
 	int dwUserIndex = *static_cast<int*>(dwUserIndexPointer);
-
-	writeLog("updateState", "start dwUserIndex = %d\n", dwUserIndex);
+	struct usb_dev_handle *handle = controllerHandler[dwUserIndex]->handle;
 	uint8_t raw_data[64];
 
+	writeLog("updateState", "start dwUserIndex = %d\n", dwUserIndex);
 	while (runThread)
 	{
 		writeLog("updateState", "usb_interrupt_read call = %d dwUserIndex = %d\n", dwUserIndex);
 		memset(raw_data, 0, 64);
-		int ret = usb_interrupt_read(controllerHandler[dwUserIndex]->handle, endpointIn, (char*)raw_data, sizeof(raw_data), 500);
+		int ret = usb_interrupt_read(handle, endpointIn, (char*)raw_data, sizeof(raw_data), 500);
 		if (ret < 0)
 		{
 			writeLog("updateState", "usb_interrupt_read fail error = %d dwUserIndex = %d\n", ret, dwUserIndex);
