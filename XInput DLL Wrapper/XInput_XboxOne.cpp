@@ -366,6 +366,12 @@ __out XINPUT_CAPABILITIES* pCapabilities				// Receives the capabilities
 		connectController(true);
 	}
 
+	if (dwFlags > XINPUT_FLAG_GAMEPAD)
+	{
+		writeLog("XInputGetCapabilities", "return ERROR_BAD_ARGUMENTS\n");
+		return ERROR_BAD_ARGUMENTS;
+	}
+
 	if (controllerInit && dwUserIndex >= 0 && dwUserIndex < 4 && controllerHandler[dwUserIndex])
 	{
 		pCapabilities->Flags = XINPUT_CAPS_VOICE_SUPPORTED;
@@ -374,16 +380,17 @@ __out XINPUT_CAPABILITIES* pCapabilities				// Receives the capabilities
 
 		pCapabilities->Gamepad.wButtons = 0xF3FF;
 
-		pCapabilities->Gamepad.bLeftTrigger =
-			pCapabilities->Gamepad.bRightTrigger = 0xFF;
+		pCapabilities->Gamepad.bLeftTrigger = 0xFF;
+		pCapabilities->Gamepad.bRightTrigger = 0xFF;
 
-		pCapabilities->Gamepad.sThumbLX =
-			pCapabilities->Gamepad.sThumbLY =
-			pCapabilities->Gamepad.sThumbRX =
-			pCapabilities->Gamepad.sThumbRY = (SHORT)0xFFC0;
+		pCapabilities->Gamepad.sThumbLX = (SHORT)0xFFC0;
+		pCapabilities->Gamepad.sThumbLY = (SHORT)0xFFC0;
+		pCapabilities->Gamepad.sThumbRX = (SHORT)0xFFC0;
+		pCapabilities->Gamepad.sThumbRY = (SHORT)0xFFC0;
 
-		pCapabilities->Vibration.wLeftMotorSpeed =
-			pCapabilities->Vibration.wRightMotorSpeed = 0xFF;
+		pCapabilities->Vibration.wLeftMotorSpeed = 0xFF;
+		pCapabilities->Vibration.wRightMotorSpeed = 0xFF;
+
 		writeLog("XInputGetCapabilities", "return ERROR_SUCCESS\n");
 		return ERROR_SUCCESS;
 	}
