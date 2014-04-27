@@ -12,15 +12,13 @@
 #include <stdio.h>
 #include <time.h>
 
-struct usb_bus *busses;
-struct usb_bus *bus;
-struct usb_device *dev;
-
 struct XboxOneControllerHandler
 {
 	struct usb_dev_handle *handle;
 	bool isConnected = false;
 	XBOXONE_STATE controllerState;
+	uint8_t lastState[64];
+	unsigned int tickCount;
 };
 
 XboxOneControllerHandler *controllerHandler[4] = { NULL, NULL, NULL, NULL };
@@ -84,11 +82,19 @@ bool updateState(int dwUserIndex)
 	writeLog("updateState", "start dwUserIndex = %d\n", dwUserIndex);
 	uint8_t raw_data[64];
 
+	memset(raw_data, 0, 64);
 	int ret = usb_interrupt_read(controllerHandler[dwUserIndex]->handle, endpointIn, (char*)raw_data, sizeof(raw_data), timeout);
 	if (ret < 0)
 	{
 		return false;
 	}
+
+	if (memcmp(controllerHandler[dwUserIndex]->lastState, raw_data, 64) != 0)
+	{
+		controllerHandler[dwUserIndex]->tickCount = (controllerHandler[dwUserIndex]->tickCount != UINT_MAX) ? controllerHandler[dwUserIndex]->tickCount + 1 : 0;
+		writeLog("updateState", "State changed dwUserIndex = %d tickCount = %d\n", dwUserIndex, controllerHandler[dwUserIndex]->tickCount);
+	}
+	memcpy(controllerHandler[dwUserIndex]->lastState, raw_data, 64);
 
 	char tag = raw_data[0];
 	char code = raw_data[1];
@@ -197,15 +203,17 @@ bool connectController(bool enable)
 		usb_find_busses();
 		usb_find_devices();
 		writeLog("connectController", "usb_init - usb_find_busses - usb_find_devices\n");
-		busses = usb_get_busses();
+		struct usb_bus *busses = usb_get_busses();
 
-		for (bus = busses; bus; bus = bus->next)
+		for (struct usb_bus *bus = busses; bus; bus = bus->next)
 		{
-			for (dev = bus->devices; dev; dev = dev->next)
+			for (struct usb_device *dev = bus->devices; dev; dev = dev->next)
 			{
 				if (dev->descriptor.idVendor == idVendor && dev->descriptor.idProduct == idProduct && xboxControllerCounter < 4)
 				{
 					controllerHandler[xboxControllerCounter] = (XboxOneControllerHandler*)malloc(sizeof(XboxOneControllerHandler));
+					memset(controllerHandler[xboxControllerCounter], 0, sizeof(XboxOneControllerHandler));
+
 					controllerHandler[xboxControllerCounter]->handle = usb_open(dev);
 					writeLog("connectController", "usb_open - xboxControllerCounter = %d\n", xboxControllerCounter);
 					if (usb_set_configuration(controllerHandler[xboxControllerCounter]->handle, configuration) < 0)
@@ -305,6 +313,7 @@ __out XINPUT_STATE* pState								// Receives the current state
 
 		//if (controllerHandler[dwUserIndex]->controllerState.guideButton) gamepadState.wButtons |= XINPUT_GAMEPAD_GUIDE;
 
+		pState->dwPacketNumber = controllerHandler[dwUserIndex]->tickCount;
 		pState->Gamepad = gamepadState;
 		writeLog("XInputGetState", "return ERROR_SUCCESS\n");
 		return ERROR_SUCCESS;
