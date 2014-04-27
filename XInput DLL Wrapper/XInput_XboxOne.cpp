@@ -176,11 +176,11 @@ bool updateState(int dwUserIndex)
 
 void vibrate(int leftTriggerVal, int rightTriggerVal, int leftVal, int rightVal, int dwUserIndex)
 {
-	writeLog("vibrate", "start\n");
+	writeLog("vibrate", "start leftTriggerVal = %d rightTriggerVal = %d leftVal = %d rightVal = %d dwUserIndex = %d \n", leftTriggerVal, rightTriggerVal, leftVal, rightVal, dwUserIndex);
 	// Motors are 0 - 255
 	unsigned char data[] = { 9, 0, 0, 9, 0, 15, leftTriggerVal, rightTriggerVal, leftVal, rightVal, 255, 0, 0 };
 	usb_interrupt_write(controllerHandler[dwUserIndex]->handle, endpointOut, (char*)data, sizeof(data), timeout);
-	writeLog("vibrate", "end\n");
+	writeLog("vibrate", "stop\n");
 }
 
 bool connectController(bool enable)
