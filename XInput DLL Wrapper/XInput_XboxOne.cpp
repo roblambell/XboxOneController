@@ -251,7 +251,7 @@ DWORD WINAPI XInputGetState
 
 		pState->Gamepad = gamepadState;
 
-		return ERROR_DEVICE_NOT_CONNECTED;
+		return ERROR_SUCCESS;
 	}
 	else
 	{
