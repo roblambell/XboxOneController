@@ -30,7 +30,7 @@ int configuration = 1;
 int interface = 0;
 int endpointIn = 0x81;
 int endpointOut = 0x01;
-int timeout = 5000; // milliseconds
+int timeout = 1; // milliseconds 
 bool controllerInit = false;
 
 // Structure we receive from the controller
