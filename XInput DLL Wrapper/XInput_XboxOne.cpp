@@ -355,9 +355,9 @@ __out XINPUT_STATE* pState								// Receives the current state
 			if (controllerHandler[dwUserIndex]->controllerState.bButton) gamepadState.wButtons |= XINPUT_GAMEPAD_B;
 			if (controllerHandler[dwUserIndex]->controllerState.aButton) gamepadState.wButtons |= XINPUT_GAMEPAD_A;
 			if (controllerHandler[dwUserIndex]->controllerState.xButton) gamepadState.wButtons |= XINPUT_GAMEPAD_X;
+			//if (controllerHandler[dwUserIndex]->controllerState.guideButton) gamepadState.wButtons |= XINPUT_GAMEPAD_GUIDE;
 
 			pState->dwPacketNumber = controllerHandler[dwUserIndex]->tickCount;
-			//if (controllerHandler[dwUserIndex]->controllerState.guideButton) gamepadState.wButtons |= XINPUT_GAMEPAD_GUIDE;
 			ReleaseMutex(XboxOneControllerMutex[dwUserIndex]);
 		}
 		pState->Gamepad = gamepadState;
@@ -558,21 +558,25 @@ __out      PXINPUT_KEYSTROKE pKeystroke					// Pointer to an XINPUT_KEYSTROKE st
 
 // Undocumented
 
-DWORD WINAPI XInputGetStateEx(DWORD dwUserIndex, XINPUT_STATE* pState)
+DWORD WINAPI XInputGetStateEx
+(
+__in  DWORD         dwUserIndex,						// Index of the gamer associated with the device
+__out XINPUT_STATE* pState								// Receives the current state
+)
 {
 	writeLog("XInputGetStateEx", "controllerInit = %d - dwUserIndex = %d \n", controllerInit, dwUserIndex);
 	if (!controllerInit)
 	{
 		connectController(true);
 	}
-
 	if (controllerInit && dwUserIndex >= 0 && dwUserIndex < 4 && controllerHandler[dwUserIndex])
 	{
-		int dwWaitResult = WaitForSingleObject(XboxOneControllerMutex[dwUserIndex], INFINITE);
-		XINPUT_GAMEPAD gamepadState;
+		int dwWaitResult = WaitForSingleObject(XboxOneControllerMutex[dwUserIndex], 100);
+		XINPUT_GAMEPAD gamepadState = { 0 };
 
 		if (dwWaitResult == WAIT_OBJECT_0)
 		{
+			writeLog("XInputGetStateEx", "Get the Mutex - dwUserIndex = %d \n", controllerInit, dwUserIndex);
 			gamepadState.bLeftTrigger = controllerHandler[dwUserIndex]->controllerState.leftTrigger;
 			gamepadState.bRightTrigger = controllerHandler[dwUserIndex]->controllerState.rightTrigger;
 			gamepadState.sThumbLX = controllerHandler[dwUserIndex]->controllerState.thumbLX;
@@ -601,17 +605,17 @@ DWORD WINAPI XInputGetStateEx(DWORD dwUserIndex, XINPUT_STATE* pState)
 			if (controllerHandler[dwUserIndex]->controllerState.xButton) gamepadState.wButtons |= XINPUT_GAMEPAD_X;
 
 			if (controllerHandler[dwUserIndex]->controllerState.guideButton) gamepadState.wButtons |= XINPUT_GAMEPAD_GUIDE;
-			ReleaseMutex(controllerHandler[dwUserIndex]);
+
+			pState->dwPacketNumber = controllerHandler[dwUserIndex]->tickCount;
+			ReleaseMutex(XboxOneControllerMutex[dwUserIndex]);
 		}
-
 		pState->Gamepad = gamepadState;
-
-		writeLog("XInputGetKeystroke", "return ERROR_SUCCESS\n");
+		writeLog("XInputGetStateEx", "return ERROR_SUCCESS\n");
 		return ERROR_SUCCESS;
 	}
 	else
 	{
-		writeLog("XInputGetKeystroke", "return ERROR_DEVICE_NOT_CONNECTED\n");
+		writeLog("XInputGetStateEx", "return ERROR_DEVICE_NOT_CONNECTED\n");
 		return ERROR_DEVICE_NOT_CONNECTED;
 	}
 }
