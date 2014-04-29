@@ -15,7 +15,7 @@
 struct XboxOneControllerHandler
 {
 	struct usb_dev_handle *handle;
-	XboxOneControllerHandler() : isConnected(false) {} bool isConnected;
+	bool isConnected;
 	XBOXONE_STATE controllerState;
 
 	uint8_t lastState[64];
@@ -127,6 +127,32 @@ DWORD WINAPI updateState(void* dwUserIndexPointer)
 				data[i] = raw_data[j];
 				i++;
 			}
+
+			controllerHandler[dwUserIndex]->controllerState.guideButton = 0;
+
+			controllerHandler[dwUserIndex]->controllerState.menu = 0;
+			controllerHandler[dwUserIndex]->controllerState.view = 0;
+			controllerHandler[dwUserIndex]->controllerState.aButton = 0;
+			controllerHandler[dwUserIndex]->controllerState.bButton = 0;
+			controllerHandler[dwUserIndex]->controllerState.xButton = 0;
+			controllerHandler[dwUserIndex]->controllerState.yButton = 0;
+
+			controllerHandler[dwUserIndex]->controllerState.up = 0;
+			controllerHandler[dwUserIndex]->controllerState.down = 0;
+			controllerHandler[dwUserIndex]->controllerState.left = 0;
+			controllerHandler[dwUserIndex]->controllerState.right = 0;
+			controllerHandler[dwUserIndex]->controllerState.leftShoulder = 0;
+			controllerHandler[dwUserIndex]->controllerState.rightShoulder = 0;
+			controllerHandler[dwUserIndex]->controllerState.leftThumb = 0;
+			controllerHandler[dwUserIndex]->controllerState.rightThumb = 0;
+
+			controllerHandler[dwUserIndex]->controllerState.leftTrigger = 0;
+			controllerHandler[dwUserIndex]->controllerState.rightTrigger = 0;
+
+			controllerHandler[dwUserIndex]->controllerState.thumbLX = 0;
+			controllerHandler[dwUserIndex]->controllerState.thumbLY = 0;
+			controllerHandler[dwUserIndex]->controllerState.thumbRX = 0;
+			controllerHandler[dwUserIndex]->controllerState.thumbRY = 0;
 
 			switch (tag)
 			{
@@ -329,9 +355,9 @@ __out XINPUT_STATE* pState								// Receives the current state
 			if (controllerHandler[dwUserIndex]->controllerState.bButton) gamepadState.wButtons |= XINPUT_GAMEPAD_B;
 			if (controllerHandler[dwUserIndex]->controllerState.aButton) gamepadState.wButtons |= XINPUT_GAMEPAD_A;
 			if (controllerHandler[dwUserIndex]->controllerState.xButton) gamepadState.wButtons |= XINPUT_GAMEPAD_X;
-			//if (controllerHandler[dwUserIndex]->controllerState.guideButton) gamepadState.wButtons |= XINPUT_GAMEPAD_GUIDE;
 
 			pState->dwPacketNumber = controllerHandler[dwUserIndex]->tickCount;
+			//if (controllerHandler[dwUserIndex]->controllerState.guideButton) gamepadState.wButtons |= XINPUT_GAMEPAD_GUIDE;
 			ReleaseMutex(XboxOneControllerMutex[dwUserIndex]);
 		}
 		pState->Gamepad = gamepadState;
@@ -386,12 +412,6 @@ __out XINPUT_CAPABILITIES* pCapabilities				// Receives the capabilities
 		connectController(true);
 	}
 
-	if (dwFlags > XINPUT_FLAG_GAMEPAD)
-	{
-		writeLog("XInputGetCapabilities", "return ERROR_BAD_ARGUMENTS\n");
-		return ERROR_BAD_ARGUMENTS;
-	}
-
 	if (controllerInit && dwUserIndex >= 0 && dwUserIndex < 4 && controllerHandler[dwUserIndex])
 	{
 		pCapabilities->Flags = XINPUT_CAPS_VOICE_SUPPORTED;
@@ -400,17 +420,16 @@ __out XINPUT_CAPABILITIES* pCapabilities				// Receives the capabilities
 
 		pCapabilities->Gamepad.wButtons = 0xF3FF;
 
-		pCapabilities->Gamepad.bLeftTrigger = 0xFF;
-		pCapabilities->Gamepad.bRightTrigger = 0xFF;
+		pCapabilities->Gamepad.bLeftTrigger =
+			pCapabilities->Gamepad.bRightTrigger = 0xFF;
 
-		pCapabilities->Gamepad.sThumbLX = (SHORT)0xFFC0;
-		pCapabilities->Gamepad.sThumbLY = (SHORT)0xFFC0;
-		pCapabilities->Gamepad.sThumbRX = (SHORT)0xFFC0;
-		pCapabilities->Gamepad.sThumbRY = (SHORT)0xFFC0;
+		pCapabilities->Gamepad.sThumbLX =
+			pCapabilities->Gamepad.sThumbLY =
+			pCapabilities->Gamepad.sThumbRX =
+			pCapabilities->Gamepad.sThumbRY = (SHORT)0xFFC0;
 
-		pCapabilities->Vibration.wLeftMotorSpeed = 0xFF;
-		pCapabilities->Vibration.wRightMotorSpeed = 0xFF;
-
+		pCapabilities->Vibration.wLeftMotorSpeed =
+			pCapabilities->Vibration.wRightMotorSpeed = 0xFF;
 		writeLog("XInputGetCapabilities", "return ERROR_SUCCESS\n");
 		return ERROR_SUCCESS;
 	}
@@ -532,25 +551,21 @@ __out      PXINPUT_KEYSTROKE pKeystroke					// Pointer to an XINPUT_KEYSTROKE st
 
 // Undocumented
 
-DWORD WINAPI XInputGetStateEx
-(
-__in  DWORD         dwUserIndex,						// Index of the gamer associated with the device
-__out XINPUT_STATE* pState								// Receives the current state
-)
+DWORD WINAPI XInputGetStateEx(DWORD dwUserIndex, XINPUT_STATE* pState)
 {
 	writeLog("XInputGetStateEx", "controllerInit = %d - dwUserIndex = %d \n", controllerInit, dwUserIndex);
 	if (!controllerInit)
 	{
 		connectController(true);
 	}
+
 	if (controllerInit && dwUserIndex >= 0 && dwUserIndex < 4 && controllerHandler[dwUserIndex])
 	{
-		int dwWaitResult = WaitForSingleObject(XboxOneControllerMutex[dwUserIndex], 100);
-		XINPUT_GAMEPAD gamepadState = { 0 };
+		int dwWaitResult = WaitForSingleObject(XboxOneControllerMutex[dwUserIndex], INFINITE);
+		XINPUT_GAMEPAD gamepadState;
 
 		if (dwWaitResult == WAIT_OBJECT_0)
 		{
-			writeLog("XInputGetStateEx", "Get the Mutex - dwUserIndex = %d \n", controllerInit, dwUserIndex);
 			gamepadState.bLeftTrigger = controllerHandler[dwUserIndex]->controllerState.leftTrigger;
 			gamepadState.bRightTrigger = controllerHandler[dwUserIndex]->controllerState.rightTrigger;
 			gamepadState.sThumbLX = controllerHandler[dwUserIndex]->controllerState.thumbLX;
@@ -579,17 +594,17 @@ __out XINPUT_STATE* pState								// Receives the current state
 			if (controllerHandler[dwUserIndex]->controllerState.xButton) gamepadState.wButtons |= XINPUT_GAMEPAD_X;
 
 			if (controllerHandler[dwUserIndex]->controllerState.guideButton) gamepadState.wButtons |= XINPUT_GAMEPAD_GUIDE;
-
-			pState->dwPacketNumber = controllerHandler[dwUserIndex]->tickCount;
-			ReleaseMutex(XboxOneControllerMutex[dwUserIndex]);
+			ReleaseMutex(controllerHandler[dwUserIndex]);
 		}
+
 		pState->Gamepad = gamepadState;
-		writeLog("XInputGetStateEx", "return ERROR_SUCCESS\n");
+
+		writeLog("XInputGetKeystroke", "return ERROR_SUCCESS\n");
 		return ERROR_SUCCESS;
 	}
 	else
 	{
-		writeLog("XInputGetStateEx", "return ERROR_DEVICE_NOT_CONNECTED\n");
+		writeLog("XInputGetKeystroke", "return ERROR_DEVICE_NOT_CONNECTED\n");
 		return ERROR_DEVICE_NOT_CONNECTED;
 	}
 }
