@@ -5,6 +5,7 @@ using System.Threading;
 using System.IO;
 using System.Runtime.InteropServices;
 using EasyHook;
+using System.Reflection;
 
 namespace XboxOneController
 {
@@ -44,7 +45,7 @@ namespace XboxOneController
                 /*
                     Now we should notice our host process about this error...
                  */
-                Interface.ReportError(RemoteHooking.GetCurrentProcessId(), e);
+                Interface.ReportError(RemoteHooking.GetCurrentProcessId(), Assembly.GetExecutingAssembly().GetName().Name, e);
 
                 return;
             }

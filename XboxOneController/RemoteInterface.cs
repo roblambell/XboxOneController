@@ -35,13 +35,14 @@ namespace XboxOneController
     {
         public void ReportError(
             Int32 InClientPID,
+            string libraryName,
             Exception e)
         {
             lock (Form1.MonitorQueue)
             {
                 Form1.MonitorQueue.Enqueue(new MonitorEntry(
                         InClientPID,
-                        "[ERROR]: \"" + e.ToString() + "\""
+                        "[" + libraryName + "][ERROR]: \"" + e.ToString() + "\""
                     ));
             }
         }

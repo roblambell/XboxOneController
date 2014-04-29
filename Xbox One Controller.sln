@@ -9,7 +9,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XInput DLL Wrapper", "XInpu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XboxOneController", "XboxOneController\XboxOneController.csproj", "{C335E0F4-88BC-42E2-BC20-0C9E2BF68847}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XinputInject", "XInputInject\XinputInject.csproj", "{6976B900-E318-44E9-BCF1-E077173EAD49}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XInputInject", "XInputInject\XInputInject.csproj", "{6976B900-E318-44E9-BCF1-E077173EAD49}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RawInputInject", "RawInputInject\RawInputInject.csproj", "{E277241C-8F68-4434-888D-5B235E6970DB}"
 EndProject
