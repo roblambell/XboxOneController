@@ -7,8 +7,8 @@
     <ProjectGuid>{6976B900-E318-44E9-BCF1-E077173EAD49}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>XboxOneControllerInject</RootNamespace>
-    <AssemblyName>XboxOneControllerInject</AssemblyName>
+    <RootNamespace>XboxOneController</RootNamespace>
+    <AssemblyName>XinputInject</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
@@ -56,7 +56,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EasyHook">
-      <HintPath>..\Packages\lib\EasyHook.dll</HintPath>
+      <HintPath>..\lib\EasyHook.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

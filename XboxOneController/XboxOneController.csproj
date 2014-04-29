@@ -83,7 +83,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EasyHook">
-      <HintPath>..\Packages\lib\EasyHook.dll</HintPath>
+      <HintPath>..\lib\EasyHook.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

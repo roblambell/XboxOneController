@@ -37,7 +37,13 @@ namespace XboxOneController
             Int32 InClientPID,
             Exception e)
         {
-            MessageBox.Show(e.ToString(), "A client process (" + InClientPID + ") has reported an error...", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+            lock (Form1.MonitorQueue)
+            {
+                Form1.MonitorQueue.Enqueue(new MonitorEntry(
+                        InClientPID,
+                        "[ERROR]: \"" + e.ToString() + "\""
+                    ));
+            }
         }
 
         public bool Ping(Int32 InClientPID)
@@ -52,7 +58,7 @@ namespace XboxOneController
             }
         }
 
-        public void OnCreateFile(
+        public void OnFunctionsCalled(
             Int32 InClientPID,
             String[] InFileNames)
         {

@@ -1,13 +1,17 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30324.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample App", "Sample App\Xbox One Controller.vcxproj", "{9B03EAB4-2FA3-4024-8D22-50EF9E6D394D}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XInput DLL Wrapper", "XInput DLL Wrapper\XInput DLL Wrapper.vcxproj", "{9AA0D6EC-49D2-456B-A642-98F8DD54D71C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XboxOneController", "XboxOneController\XboxOneController.csproj", "{C335E0F4-88BC-42E2-BC20-0C9E2BF68847}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XboxOneControllerInject", "XboxOneControllerInject\XboxOneControllerInject.csproj", "{6976B900-E318-44E9-BCF1-E077173EAD49}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XinputInject", "XInputInject\XinputInject.csproj", "{6976B900-E318-44E9-BCF1-E077173EAD49}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RawInputInject", "RawInputInject\RawInputInject.csproj", "{E277241C-8F68-4434-888D-5B235E6970DB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -59,6 +63,16 @@ Global
 		{6976B900-E318-44E9-BCF1-E077173EAD49}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{6976B900-E318-44E9-BCF1-E077173EAD49}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{6976B900-E318-44E9-BCF1-E077173EAD49}.Release|Win32.ActiveCfg = Release|Any CPU
+		{E277241C-8F68-4434-888D-5B235E6970DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E277241C-8F68-4434-888D-5B235E6970DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E277241C-8F68-4434-888D-5B235E6970DB}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{E277241C-8F68-4434-888D-5B235E6970DB}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{E277241C-8F68-4434-888D-5B235E6970DB}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{E277241C-8F68-4434-888D-5B235E6970DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E277241C-8F68-4434-888D-5B235E6970DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E277241C-8F68-4434-888D-5B235E6970DB}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{E277241C-8F68-4434-888D-5B235E6970DB}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{E277241C-8F68-4434-888D-5B235E6970DB}.Release|Win32.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

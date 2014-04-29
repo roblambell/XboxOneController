@@ -284,12 +284,11 @@ namespace XboxOneController
                 try
                 {
                     HookedProcesses.Add(PID); // this will ensure that Ping() returns true...
-
                     RemoteHooking.Inject(
                         PID,
                         (_noGAC ? InjectionOptions.DoNotRequireStrongName : InjectionOptions.Default), // if not using GAC allow assembly without strong name
-                        System.IO.Path.Combine(System.IO.Path.GetDirectoryName(typeof(RemoInterface).Assembly.Location), "XboxOneControllerInject.dll"), // 32-bit version (the same because AnyCPU)
-                        System.IO.Path.Combine(System.IO.Path.GetDirectoryName(typeof(RemoInterface).Assembly.Location), "XboxOneControllerInject.dll"), //"ProcMonInject.dll", // 64-bit version (the same because AnyCPU)
+                        System.IO.Path.Combine(System.IO.Path.GetDirectoryName(typeof(RemoInterface).Assembly.Location), "XinputInject.dll"), // 32-bit version (the same because AnyCPU)
+                        System.IO.Path.Combine(System.IO.Path.GetDirectoryName(typeof(RemoInterface).Assembly.Location), "XinputInject.dll"), //"ProcMonInject.dll", // 64-bit version (the same because AnyCPU)
                         // the optional parameter list...
                         ChannelName);
                 }
@@ -298,7 +297,13 @@ namespace XboxOneController
                     HookedProcesses.Remove(PID);
 
                     e.Item.Checked = false;
-
+                   /* lock (Form1.MonitorQueue)
+                    {
+                            Form1.MonitorQueue.Enqueue(new MonitorEntry(
+                                    PID,
+                                    "Impossible to hook, maybe"
+                                ));
+                    }*/
                     MessageBox.Show(Msg.Message, "An error has occurred...", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 }
             }

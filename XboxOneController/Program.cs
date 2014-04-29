@@ -19,7 +19,8 @@ namespace XboxOneController
             {
                 Config.Register(
                     "XboxOneController Hook",
-                    "XboxOneControllerInject.dll",
+                    "XinputInject.dll",
+                    "RawInputInject.dll",
                     "XboxOneController.exe");
             }
             catch (ApplicationException ex)
