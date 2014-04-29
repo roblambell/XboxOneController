@@ -11,7 +11,7 @@ namespace XboxOneController
     public class XboxOneControllerInjection : EasyHook.IEntryPoint
     {
         public RemoInterface Interface = null;
-        public LocalHook CreateFileHook = null;
+        public List<LocalHook> Hooks = null;
         Stack<String> Queue = new Stack<string>();
 
         public XboxOneControllerInjection(
@@ -19,7 +19,7 @@ namespace XboxOneController
             String InChannelName)
         {
             Interface = RemoteHooking.IpcConnectClient<RemoInterface>(InChannelName);
-
+            Hooks = new List<LocalHook>();
             Interface.Ping(RemoteHooking.GetCurrentProcessId());
         }
 
@@ -29,16 +29,16 @@ namespace XboxOneController
         {
             try
             {
-                CreateFileHook = LocalHook.Create(
-                    LocalHook.GetProcAddress("kernel32.dll", "CreateFileW"),
+                Hooks.Add(LocalHook.Create(LocalHook.GetProcAddress("kernel32.dll", "CreateFileW"),
                     new DCreateFile(CreateFile_Hooked),
-                    this);
+                    this));
 
                 /*
                  * Don't forget that all hooks will start deaktivated...
                  * The following ensures that all threads are intercepted:
                  */
-                CreateFileHook.ThreadACL.SetExclusiveACL(new Int32[1]);
+                foreach(LocalHook hook in Hooks)
+                    hook.ThreadACL.SetExclusiveACL(new Int32[1]);
             }
             catch (Exception e)
             {
@@ -146,5 +146,30 @@ namespace XboxOneController
                 InFlagsAndAttributes,
                 InTemplateFile);
         }
+
+        /*[UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Unicode, SetLastError = true)]
+        delegate uint DXInputGetState(PlayerIndex playerIndex, out XINPUT_STATE pState);
+        delegate void DXInputGetStateAsync(PlayerIndex playerIndex, out XINPUT_STATE pState);
+
+        [DllImport("xinput1_3.dll", EntryPoint = "XInputGetState")]
+        static extern uint XInputGetState(PlayerIndex playerIndex, out XINPUT_STATE pState);
+
+        static uint XInputGetState_Hooked(PlayerIndex playerIndex, out XINPUT_STATE pState)
+        {
+            try
+            {
+                XboxOneControllerInjection This = (XboxOneControllerInjection)HookRuntimeInfo.Callback;
+
+                lock (This.Queue)
+                {
+                    if (This.Queue.Count < 1000)
+                        This.Queue.Push("XInputGetState");
+                }
+            }
+            catch
+            {
+            }
+            return XInputGetState(playerIndex, out pState);
+        }*/
     }
 }
