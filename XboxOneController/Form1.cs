@@ -288,8 +288,8 @@ namespace XboxOneController
                     RemoteHooking.Inject(
                         PID,
                         (_noGAC ? InjectionOptions.DoNotRequireStrongName : InjectionOptions.Default), // if not using GAC allow assembly without strong name
-                        System.IO.Path.Combine(System.IO.Path.GetDirectoryName(typeof(RemoInterface).Assembly.Location), "ProcMonInject.dll"), // 32-bit version (the same because AnyCPU)
-                        System.IO.Path.Combine(System.IO.Path.GetDirectoryName(typeof(RemoInterface).Assembly.Location), "ProcMonInject.dll"), //"ProcMonInject.dll", // 64-bit version (the same because AnyCPU)
+                        System.IO.Path.Combine(System.IO.Path.GetDirectoryName(typeof(RemoInterface).Assembly.Location), "XboxOneControllerInject.dll"), // 32-bit version (the same because AnyCPU)
+                        System.IO.Path.Combine(System.IO.Path.GetDirectoryName(typeof(RemoInterface).Assembly.Location), "XboxOneControllerInject.dll"), //"ProcMonInject.dll", // 64-bit version (the same because AnyCPU)
                         // the optional parameter list...
                         ChannelName);
                 }
