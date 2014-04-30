@@ -56,12 +56,14 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EasyHook">
-      <HintPath>..\lib\EasyHook.dll</HintPath>
+      <HintPath>..\Packages\lib\EasyHook.dll</HintPath>
     </Reference>
-    <Reference Include="SharpDX">
+    <Reference Include="SharpDX, Version=2.5.0.0, Culture=neutral, PublicKeyToken=627a3d6d1956f55a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\SharpDX.2.5.0\lib\net40\SharpDX.dll</HintPath>
     </Reference>
-    <Reference Include="SharpDX.XInput">
+    <Reference Include="SharpDX.XInput, Version=2.5.0.0, Culture=neutral, PublicKeyToken=627a3d6d1956f55a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\SharpDX.XInput.2.5.0\lib\net40\SharpDX.XInput.dll</HintPath>
     </Reference>
     <Reference Include="System" />

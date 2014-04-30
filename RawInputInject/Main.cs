@@ -30,8 +30,17 @@ namespace XboxOneController
         {
             try
             {
-                Hooks.Add(LocalHook.Create(LocalHook.GetProcAddress("kernel32.dll", "CreateFileW"),
-                    new DCreateFile(CreateFile_Hooked),
+                Hooks.Add(LocalHook.Create(LocalHook.GetProcAddress("user32.dll", "GetRawInputData"),
+                    new DGetRawInputData(GetRawInputData_hook),
+                    this));
+                Hooks.Add(LocalHook.Create(LocalHook.GetProcAddress("user32.dll", "GetRawInputDeviceInfoW"),
+                    new DGetRawInputDeviceInfo(GetRawInputDeviceInfo_hook),
+                    this));
+                Hooks.Add(LocalHook.Create(LocalHook.GetProcAddress("user32.dll", "GetRawInputDeviceList"),
+                    new DGetRawInputDeviceList(GetRawInputDeviceList_hook),
+                    this));
+                Hooks.Add(LocalHook.Create(LocalHook.GetProcAddress("user32.dll", "RegisterRawInputDevices"),
+                    new DRegisterRawInputDevices(RegisterRawInputDevices_hook),
                     this));
                 /*
                  * Don't forget that all hooks will start deaktivated...
@@ -81,70 +90,120 @@ namespace XboxOneController
         }
 
         [UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Unicode, SetLastError = true)]
-        delegate IntPtr DCreateFile(
-            String InFileName,
-            UInt32 InDesiredAccess,
-            UInt32 InShareMode,
-            IntPtr InSecurityAttributes,
-            UInt32 InCreationDisposition,
-            UInt32 InFlagsAndAttributes,
-            IntPtr InTemplateFile);
+        delegate uint DGetRawInputData(IntPtr hRawInput, uint uiCommand, IntPtr pData, ref uint pcbSize, uint cbSizeHeader);
+        delegate uint DGetRawInputDataAsync(IntPtr hRawInput, uint uiCommand, IntPtr pData, ref uint pcbSize, uint cbSizeHeader);
+        [DllImport("user32.dll", EntryPoint = "GetRawInputData", CharSet = CharSet.Unicode, SetLastError = true)]
+        public extern static uint GetRawInputData(IntPtr hRawInput, uint uiCommand, IntPtr pData, ref uint pcbSize, uint cbSizeHeader);
 
-        delegate void DCreateFileAsync(
-            Int32 InClientPID,
-            IntPtr InHandle,
-            String InFileName,
-            UInt32 InDesiredAccess,
-            UInt32 InShareMode,
-            IntPtr InSecurityAttributes,
-            UInt32 InCreationDisposition,
-            UInt32 InFlagsAndAttributes,
-            IntPtr InTemplateFile);
-
-        // just use a P-Invoke implementation to get native API access from C# (this step is not necessary for C++.NET)
-        [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true, CallingConvention = CallingConvention.StdCall)]
-        static extern IntPtr CreateFile(
-            String InFileName,
-            UInt32 InDesiredAccess,
-            UInt32 InShareMode,
-            IntPtr InSecurityAttributes,
-            UInt32 InCreationDisposition,
-            UInt32 InFlagsAndAttributes,
-            IntPtr InTemplateFile);
-
-        // this is where we are intercepting all file accesses!
-        static IntPtr CreateFile_Hooked(
-            String InFileName,
-            UInt32 InDesiredAccess,
-            UInt32 InShareMode,
-            IntPtr InSecurityAttributes,
-            UInt32 InCreationDisposition,
-            UInt32 InFlagsAndAttributes,
-            IntPtr InTemplateFile)
+        static uint GetRawInputData_hook(IntPtr hRawInput, uint uiCommand, IntPtr pData, ref uint pcbSize, uint cbSizeHeader)
         {
             try
             {
                 XboxOneControllerInjection This = (XboxOneControllerInjection)HookRuntimeInfo.Callback;
-
+                //TODO
                 lock (This.Queue)
                 {
                     if (This.Queue.Count < 1000)
-                        This.Queue.Push(InFileName);
+                        This.Queue.Push("GetRawInputData");
                 }
             }
             catch
             {
             }
+            return GetRawInputData(hRawInput, uiCommand, pData, ref pcbSize, cbSizeHeader);
+        }
 
-            // call original API...
-            return CreateFile(
-                InFileName,
-                InDesiredAccess,
-                InShareMode,
-                InSecurityAttributes,
-                InCreationDisposition,
-                InFlagsAndAttributes,
-                InTemplateFile);
+
+        [UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Unicode, SetLastError = true)]
+        delegate uint DGetRawInputDeviceInfo(IntPtr hDevice, uint uiCommand, IntPtr pData, ref uint pcbSize);
+        delegate uint DGetRawInputDeviceInfoAsync(IntPtr hDevice, uint uiCommand, IntPtr pData, ref uint pcbSize);
+        [DllImport("user32.dll", EntryPoint = "GetRawInputDeviceInfo", CharSet = CharSet.Unicode, SetLastError = true)]
+        public static extern uint GetRawInputDeviceInfo(IntPtr hDevice, uint uiCommand, IntPtr pData, ref uint pcbSize);
+
+        static uint GetRawInputDeviceInfo_hook(IntPtr hDevice, uint uiCommand, IntPtr pData, ref uint pcbSize)
+        {
+            try
+            {
+                XboxOneControllerInjection This = (XboxOneControllerInjection)HookRuntimeInfo.Callback;
+                //TODO
+                lock (This.Queue)
+                {
+                    if (This.Queue.Count < 1000)
+                        This.Queue.Push("GetRawInputDeviceInfo");
+                }
+            }
+            catch
+            {
+            }
+            return GetRawInputDeviceInfo(hDevice, uiCommand, pData, ref pcbSize);
+        }
+
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct RAWINPUTDEVICELIST
+        {
+            public IntPtr hDevice;
+            public Int32 dwType;
+        }
+
+        [UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Unicode, SetLastError = true)]
+        delegate uint DGetRawInputDeviceList([Out]RAWINPUTDEVICELIST[] pRawInputDeviceList, ref uint puiNumDevices, uint cbSize);
+        delegate uint DGetRawInputDeviceListAsync([Out]RAWINPUTDEVICELIST[] pRawInputDeviceList, ref uint puiNumDevices, uint cbSize);
+        [DllImport("user32.dll")]
+        public static extern uint GetRawInputDeviceList([Out]RAWINPUTDEVICELIST[] pRawInputDeviceList, ref uint puiNumDevices, uint cbSize);
+        static uint GetRawInputDeviceList_hook([Out]RAWINPUTDEVICELIST[] pRawInputDeviceList, ref uint puiNumDevices, uint cbSize)
+        {
+            try
+            {
+                XboxOneControllerInjection This = (XboxOneControllerInjection)HookRuntimeInfo.Callback;
+                //TODO
+                lock (This.Queue)
+                {
+                    if (This.Queue.Count < 1000)
+                        This.Queue.Push("GetRawInputDeviceInfo");
+                }
+            }
+            catch
+            {
+            }
+            return GetRawInputDeviceList(pRawInputDeviceList, ref puiNumDevices, cbSize);
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct RAWINPUTDEVICE
+        {
+            [MarshalAs(UnmanagedType.U2)]
+            public ushort usUsagePage;
+            [MarshalAs(UnmanagedType.U2)]
+            public ushort usUsage;
+            [MarshalAs(UnmanagedType.U4)]
+            public int dwFlags;
+            public IntPtr hwndTarget; // The window that will receive WM_INPUT messages
+        }
+
+
+        [UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Unicode, SetLastError = true)]
+        delegate bool DRegisterRawInputDevices(RAWINPUTDEVICE[] pRawInputDevices, uint uiNumDevices, int cbSize);
+        delegate bool DRegisterRawInputDevicesAsync(RAWINPUTDEVICE[] pRawInputDevices, uint uiNumDevices, int cbSize);
+        [DllImport("user32.dll", EntryPoint = "RegisterRawInputDevices")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool RegisterRawInputDevices(RAWINPUTDEVICE[] pRawInputDevices, uint uiNumDevices, int cbSize);
+        static bool RegisterRawInputDevices_hook(RAWINPUTDEVICE[] pRawInputDevices, uint uiNumDevices, int cbSize)
+        {
+            try
+            {
+                XboxOneControllerInjection This = (XboxOneControllerInjection)HookRuntimeInfo.Callback;
+                //TODO
+                lock (This.Queue)
+                {
+                    if (This.Queue.Count < 1000)
+                        This.Queue.Push("RegisterRawInputDevices");
+                }
+            }
+            catch
+            {
+            }
+            return RegisterRawInputDevices(pRawInputDevices, uiNumDevices, cbSize);
         }
     }
 }

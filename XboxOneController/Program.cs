@@ -21,6 +21,8 @@ namespace XboxOneController
                     "XboxOneController Hook",
                     "XinputInject.dll",
                     "RawInputInject.dll",
+                    "SharpDX.dll",
+                    "SharpDX.XInput.dll",
                     "XboxOneController.exe");
             }
             catch (ApplicationException ex)

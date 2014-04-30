@@ -52,6 +52,10 @@
       <Project>{fe6eeda1-b1c1-4c46-afa0-f5432fda37fb}</Project>
       <Name>XboxOnePadReader</Name>
     </ProjectReference>
+    <ProjectReference Include="..\XInputInject\XInputInject.csproj">
+      <Project>{6976b900-e318-44e9-bcf1-e077173ead49}</Project>
+      <Name>XInputInject</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
