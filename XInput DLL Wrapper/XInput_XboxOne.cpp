@@ -15,7 +15,7 @@
 struct XboxOneControllerHandler
 {
 	struct usb_dev_handle *handle;
-	XboxOneControllerHandler() : isConnected(false) {} bool isConnected;
+	bool isConnected;
 	XBOXONE_STATE controllerState;
 
 	uint8_t lastState[64];
