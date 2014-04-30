@@ -39,6 +39,9 @@ namespace XboxOneController
                 Hooks.Add(LocalHook.Create(LocalHook.GetProcAddress("user32.dll", "GetRawInputDeviceList"),
                     new DGetRawInputDeviceList(GetRawInputDeviceList_hook),
                     this));
+                Hooks.Add(LocalHook.Create(LocalHook.GetProcAddress("user32.dll", "RegisterRawInputDevices"),
+                    new DRegisterRawInputDevices(RegisterRawInputDevices_hook),
+                    this));
                 /*
                  * Don't forget that all hooks will start deaktivated...
                  * The following ensures that all threads are intercepted:
@@ -164,6 +167,43 @@ namespace XboxOneController
             {
             }
             return GetRawInputDeviceList(pRawInputDeviceList, ref puiNumDevices, cbSize);
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct RAWINPUTDEVICE
+        {
+            [MarshalAs(UnmanagedType.U2)]
+            public ushort usUsagePage;
+            [MarshalAs(UnmanagedType.U2)]
+            public ushort usUsage;
+            [MarshalAs(UnmanagedType.U4)]
+            public int dwFlags;
+            public IntPtr hwndTarget; // The window that will receive WM_INPUT messages
+        }
+
+
+        [UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Unicode, SetLastError = true)]
+        delegate bool DRegisterRawInputDevices(RAWINPUTDEVICE[] pRawInputDevices, uint uiNumDevices, int cbSize);
+        delegate bool DRegisterRawInputDevicesAsync(RAWINPUTDEVICE[] pRawInputDevices, uint uiNumDevices, int cbSize);
+        [DllImport("user32.dll", EntryPoint = "RegisterRawInputDevices")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool RegisterRawInputDevices(RAWINPUTDEVICE[] pRawInputDevices, uint uiNumDevices, int cbSize);
+        static bool RegisterRawInputDevices_hook(RAWINPUTDEVICE[] pRawInputDevices, uint uiNumDevices, int cbSize)
+        {
+            try
+            {
+                XboxOneControllerInjection This = (XboxOneControllerInjection)HookRuntimeInfo.Callback;
+                //TODO
+                lock (This.Queue)
+                {
+                    if (This.Queue.Count < 1000)
+                        This.Queue.Push("RegisterRawInputDevices");
+                }
+            }
+            catch
+            {
+            }
+            return RegisterRawInputDevices(pRawInputDevices, uiNumDevices, cbSize);
         }
     }
 }
