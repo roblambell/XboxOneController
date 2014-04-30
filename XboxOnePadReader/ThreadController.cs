@@ -64,7 +64,7 @@ namespace XboxOnePadReader
 
                 Array.Copy(rawData, 2, data, 0, 62);
 
-                switch (code)
+                switch (tag)
                 {
                     case 0x07:
                         if ((data[2] & 0x01) != 0)
