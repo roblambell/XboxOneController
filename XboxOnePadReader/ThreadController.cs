@@ -23,7 +23,7 @@ namespace XboxOnePadReader
         private byte[] lastState = new byte[64];
         private UsbDevice _myDevice;
 
-        public volatile uint tickCount = 0;
+        public volatile int tickCount = 0;
         public volatile XboxOneState state = new XboxOneState();
 
         public ThreadController(UsbDevice myDevice)
@@ -42,9 +42,9 @@ namespace XboxOnePadReader
             if (ec != ErrorCode.None) throw new Exception(UsbDevice.LastErrorString);
         }
 
-        int iround(double num)
+        public static byte iround(double num)
         {
-            return (num > 0.0) ? (int)Math.Floor(num + 0.5) : (int)Math.Ceiling(num - 0.5);
+            return (num > 0.0) ? (byte)Math.Floor(num + 0.5) : (byte)Math.Ceiling(num - 0.5);
         }
 
         public void UpdateState()
@@ -81,26 +81,26 @@ namespace XboxOnePadReader
                         handle.Free();
 
                         // char *buttons1_index[] = {"Sync", "Unknown", "Menu", "View", "A", "B", "X", "Y"};
-                        state.menu = ((reportedState.buttons1 & (1 << 2)) != 0) ? 1 : 0;
-                        state.view = ((reportedState.buttons1 & (1 << 3)) != 0) ? 1 : 0;
-                        state.aButton = ((reportedState.buttons1 & (1 << 4)) != 0) ? 1 : 0;
-                        state.bButton = ((reportedState.buttons1 & (1 << 5)) != 0) ? 1 : 0;
-                        state.xButton = ((reportedState.buttons1 & (1 << 6)) != 0) ? 1 : 0;
-                        state.yButton = ((reportedState.buttons1 & (1 << 7)) != 0) ? 1 : 0;
+                        state.menu = ((reportedState.buttons1 & (1 << 2)) != 0) ? (byte)1 : (byte)0;
+                        state.view = ((reportedState.buttons1 & (1 << 3)) != 0) ? (byte)1 : (byte)0;
+                        state.aButton = ((reportedState.buttons1 & (1 << 4)) != 0) ? (byte)1 : (byte)0;
+                        state.bButton = ((reportedState.buttons1 & (1 << 5)) != 0) ? (byte)1 : (byte)0;
+                        state.xButton = ((reportedState.buttons1 & (1 << 6)) != 0) ? (byte)1 : (byte)0;
+                        state.yButton = ((reportedState.buttons1 & (1 << 7)) != 0) ? (byte)1 : (byte)0;
 
                         // char *buttons2_index[] = {"Up", "Down", "Left", "Right", "Left Shoulder", "Right Shoulder", "Left Stick (Pressed)", "Right Stick (Pressed)"};
-                        state.up = ((reportedState.buttons2 & (1 << 0)) != 0) ? 1 : 0;
-                        state.down = ((reportedState.buttons2 & (1 << 1)) != 0) ? 1 : 0;
-                        state.left = ((reportedState.buttons2 & (1 << 2)) != 0) ? 1 : 0;
-                        state.right = ((reportedState.buttons2 & (1 << 3)) != 0) ? 1 : 0;
-                        state.leftShoulder = ((reportedState.buttons2 & (1 << 4)) != 0) ? 1 : 0;
-                        state.rightShoulder = ((reportedState.buttons2 & (1 << 5)) != 0) ? 1 : 0;
-                        state.leftThumb = ((reportedState.buttons2 & (1 << 6)) != 0) ? 1 : 0;
-                        state.rightThumb = ((reportedState.buttons2 & (1 << 7)) != 0) ? 1 : 0;
+                        state.up = ((reportedState.buttons2 & (1 << 0)) != 0) ? (byte)1 : (byte)0;
+                        state.down = ((reportedState.buttons2 & (1 << 1)) != 0) ? (byte)1 : (byte)0;
+                        state.left = ((reportedState.buttons2 & (1 << 2)) != 0) ? (byte)1 : (byte)0;
+                        state.right = ((reportedState.buttons2 & (1 << 3)) != 0) ? (byte)1 : (byte)0;
+                        state.leftShoulder = ((reportedState.buttons2 & (1 << 4)) != 0) ? (byte)1 : (byte)0;
+                        state.rightShoulder = ((reportedState.buttons2 & (1 << 5)) != 0) ? (byte)1 : (byte)0;
+                        state.leftThumb = ((reportedState.buttons2 & (1 << 6)) != 0) ? (byte)1 : (byte)0;
+                        state.rightThumb = ((reportedState.buttons2 & (1 << 7)) != 0) ? (byte)1 : (byte)0;
 
                         // Triggers are 0 - 1023 (need to be 0 - 255)
-                        state.leftTrigger = reportedState.leftTrigger > 0 ? iround((reportedState.leftTrigger / (float)1023) * 255) : 0;
-                        state.rightTrigger = reportedState.rightTrigger > 0 ? iround((reportedState.rightTrigger / (float)1023) * 255) : 0;
+                        state.leftTrigger = reportedState.leftTrigger > 0 ? iround((reportedState.leftTrigger / (float)1023) * 255) : (byte)0;
+                        state.rightTrigger = reportedState.rightTrigger > 0 ? iround((reportedState.rightTrigger / (float)1023) * 255) : (byte)0;
 
                         // Axes are -32767 - 32767 (as expected)
                         state.thumbLX = reportedState.thumbLX;
@@ -149,27 +149,27 @@ namespace XboxOnePadReader
         public class XboxOneState
         {
             public XboxOneState() {}
-            public int guideButton;
-            public int view;
-            public int menu;
-            public int rightShoulder;
-            public int rightTrigger;
-            public int rightThumb;
-            public int leftShoulder;
-            public int leftTrigger;
-            public int leftThumb;
-            public int thumbRX;
-            public int thumbRY;
-            public int thumbLX;
-            public int thumbLY;
-            public int up;
-            public int down;
-            public int left;
-            public int right;
-            public int yButton;
-            public int bButton;
-            public int aButton;
-            public int xButton;
+            public byte guideButton;
+            public byte view;
+            public byte menu;
+            public byte rightShoulder;
+            public byte rightTrigger;
+            public byte rightThumb;
+            public byte leftShoulder;
+            public byte leftTrigger;
+            public byte leftThumb;
+            public short thumbRX;
+            public short thumbRY;
+            public short thumbLX;
+            public short thumbLY;
+            public byte up;
+            public byte down;
+            public byte left;
+            public byte right;
+            public byte yButton;
+            public byte bButton;
+            public byte aButton;
+            public byte xButton;
         };
 
         [StructLayout(LayoutKind.Sequential)]

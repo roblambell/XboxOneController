@@ -20,6 +20,9 @@ namespace PadReaderTest
                 ++x;
             }
             myController.CloseController();
+
+            XboxOneController.State lol = new XboxOneController.State();
+            lol.PacketNumber = 1;
         }
     }
 }
