@@ -203,8 +203,7 @@
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Name = "Form1";
-            this.Text = "Interactive Process Monitor powered by EasyHook        -       Copyrights 2008 by" +
-                " Christoph Husse,  released under MIT-License";
+            this.Text = "XboxOneController App - Thanks to EasyHook !";
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
