@@ -11,36 +11,36 @@ namespace XboxOnePadReader
 {
     public class ControllerReader
     {
-        private static ControllerReader instance;
-        public List<ThreadController> controllers;
-        private List<Thread> controllersThread;
+        private static ControllerReader instance = null;
+        public List<ThreadController> controllers = new List<ThreadController>();
+        private List<Thread> controllersThread = new List<Thread>();
         private const int idVendor = 0x045E;
         private const int idProduct = 0x02D1;
 
         public ControllerReader()
         {
-            //Find devices matching the vendor and product ID
-            UsbDeviceFinder USBFinder = new UsbDeviceFinder(idVendor, idProduct);
-            //Using the registry create a list of those devices
-            UsbRegDeviceList USBRegistryDevices = new UsbRegDeviceList();
-            USBRegistryDevices = USBRegistryDevices.FindAll(USBFinder);
-            
-            foreach (UsbRegistry winUsbRegistry in USBRegistryDevices)
+            UsbRegDeviceList allDevices = UsbDevice.AllDevices;
+
+            foreach (UsbRegistry usbRegistry in allDevices)
             {
-                if (controllers.Count == 4)
-                    return;
-
-                try
+                if (usbRegistry.Pid == idProduct && usbRegistry.Vid == idVendor)
                 {
-                    UsbDevice myDevice = winUsbRegistry.Device;
-                    ThreadController controller = new ThreadController(winUsbRegistry.Device);
+                    if (controllers.Count == 4)
+                        return;
 
-                    Thread myThread = new Thread(new ThreadStart(controller.UpdateState));
+                    try
+                    {
+                        UsbDevice myDevice = usbRegistry.Device;
+                        ThreadController controller = new ThreadController(usbRegistry.Device);
 
-                    controllersThread.Add(myThread);
-                    controllers.Add(controller);
+                        Thread myThread = new Thread(new ThreadStart(controller.UpdateState));
+
+                        controllersThread.Add(myThread);
+                        controllers.Add(controller);
+                        myThread.Start();
+                    }
+                    catch (Exception) { }
                 }
-                catch (Exception) { }
             }
         }
 

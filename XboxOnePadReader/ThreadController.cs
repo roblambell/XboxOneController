@@ -28,12 +28,13 @@ namespace XboxOnePadReader
 
         public ThreadController(UsbDevice myDevice)
         {
-            IUsbDevice wholeUsbDevice = myDevice as IUsbDevice;
+            _myDevice = myDevice;
+            IUsbDevice wholeUsbDevice = _myDevice as IUsbDevice;
 
             wholeUsbDevice.SetConfiguration(configurations);
             wholeUsbDevice.ClaimInterface(interfaces);
-            reader = myDevice.OpenEndpointReader(ReadEndpointID.Ep01);
-            writer = myDevice.OpenEndpointWriter(WriteEndpointID.Ep01);
+            reader = _myDevice.OpenEndpointReader(ReadEndpointID.Ep01);
+            writer = _myDevice.OpenEndpointWriter(WriteEndpointID.Ep01);
 
             byte[] data = { 0x05, 0x20 };
             int dataWritten = 0;
@@ -52,7 +53,7 @@ namespace XboxOnePadReader
             {
                 byte[] rawData = new byte[64];
                 int transferLength;
-                reader.Read(rawData, 500, out transferLength);
+                reader.Read(rawData, 1000, out transferLength);
 
                 if (!Enumerable.SequenceEqual(lastState, rawData))
                     ++tickCount;
@@ -61,7 +62,9 @@ namespace XboxOnePadReader
                 byte code = rawData[1];
                 byte[] data = new byte[62];
 
-                switch (tag)
+                Array.Copy(rawData, 2, data, 0, 62);
+
+                switch (code)
                 {
                     case 0x07:
                         if ((data[2] & 0x01) != 0)
@@ -169,6 +172,7 @@ namespace XboxOnePadReader
             public int xButton;
         };
 
+        [StructLayout(LayoutKind.Sequential)]
         public struct XboxOneControllerState
         {
             public byte eventCount;
