@@ -84,6 +84,10 @@
       <Project>{c335e0f4-88bc-42e2-bc20-0c9e2bf68847}</Project>
       <Name>XboxOneController</Name>
     </ProjectReference>
+    <ProjectReference Include="..\XboxOnePadReader\XboxOnePadReader.csproj">
+      <Project>{fe6eeda1-b1c1-4c46-afa0-f5432fda37fb}</Project>
+      <Name>XboxOnePadReader</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="Examples.snk" />

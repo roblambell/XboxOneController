@@ -1,8 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.30324.0
-MinimumVisualStudioVersion = 10.0.40219.1
+# Visual Studio 2012
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample App", "Sample App\Xbox One Controller.vcxproj", "{9B03EAB4-2FA3-4024-8D22-50EF9E6D394D}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XInput DLL Wrapper", "XInput DLL Wrapper\XInput DLL Wrapper.vcxproj", "{9AA0D6EC-49D2-456B-A642-98F8DD54D71C}"
@@ -12,6 +10,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XInputInject", "XInputInject\XInputInject.csproj", "{6976B900-E318-44E9-BCF1-E077173EAD49}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RawInputInject", "RawInputInject\RawInputInject.csproj", "{E277241C-8F68-4434-888D-5B235E6970DB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XboxOnePadReader", "XboxOnePadReader\XboxOnePadReader.csproj", "{FE6EEDA1-B1C1-4C46-AFA0-F5432FDA37FB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PadReaderTest", "PadReaderTest\PadReaderTest.csproj", "{56D36212-0203-4B72-ACF3-FB17EBAED174}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -73,6 +75,26 @@ Global
 		{E277241C-8F68-4434-888D-5B235E6970DB}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{E277241C-8F68-4434-888D-5B235E6970DB}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{E277241C-8F68-4434-888D-5B235E6970DB}.Release|Win32.ActiveCfg = Release|Any CPU
+		{FE6EEDA1-B1C1-4C46-AFA0-F5432FDA37FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE6EEDA1-B1C1-4C46-AFA0-F5432FDA37FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE6EEDA1-B1C1-4C46-AFA0-F5432FDA37FB}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{FE6EEDA1-B1C1-4C46-AFA0-F5432FDA37FB}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{FE6EEDA1-B1C1-4C46-AFA0-F5432FDA37FB}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{FE6EEDA1-B1C1-4C46-AFA0-F5432FDA37FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE6EEDA1-B1C1-4C46-AFA0-F5432FDA37FB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FE6EEDA1-B1C1-4C46-AFA0-F5432FDA37FB}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{FE6EEDA1-B1C1-4C46-AFA0-F5432FDA37FB}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{FE6EEDA1-B1C1-4C46-AFA0-F5432FDA37FB}.Release|Win32.ActiveCfg = Release|Any CPU
+		{56D36212-0203-4B72-ACF3-FB17EBAED174}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{56D36212-0203-4B72-ACF3-FB17EBAED174}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{56D36212-0203-4B72-ACF3-FB17EBAED174}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{56D36212-0203-4B72-ACF3-FB17EBAED174}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{56D36212-0203-4B72-ACF3-FB17EBAED174}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{56D36212-0203-4B72-ACF3-FB17EBAED174}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{56D36212-0203-4B72-ACF3-FB17EBAED174}.Release|Any CPU.Build.0 = Release|Any CPU
+		{56D36212-0203-4B72-ACF3-FB17EBAED174}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{56D36212-0203-4B72-ACF3-FB17EBAED174}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{56D36212-0203-4B72-ACF3-FB17EBAED174}.Release|Win32.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
