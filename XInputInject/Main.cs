@@ -16,8 +16,9 @@ namespace XboxOneController
     public class XboxOneControllerInjection : EasyHook.IEntryPoint
     {
         private const uint ERROR_DEVICE_NOT_CONNECTED = 0x1167;
-        private const uint ERROR_SUCCES = 0x00;
+        private const uint ERROR_SUCCESS = 0x00;
         private const uint ERROR_BAD_ARGUMENTS = 0x160;
+        private const uint ERROR_EMPTY = 0x4306;
 
         public RemoInterface Interface = null;
         public List<LocalHook> Hooks = null;
@@ -272,7 +273,7 @@ namespace XboxOneController
             {
                 return ERROR_DEVICE_NOT_CONNECTED;
             }
-            return ERROR_SUCCES;
+            return ERROR_SUCCESS;
         }
 
         [UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Unicode, SetLastError = true)]
@@ -329,7 +330,7 @@ namespace XboxOneController
             {
                 return ERROR_DEVICE_NOT_CONNECTED;
             }
-            return ERROR_SUCCES;
+            return ERROR_SUCCESS;
         }
 
         [UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Unicode, SetLastError = true)]
@@ -343,7 +344,7 @@ namespace XboxOneController
             try
             {
                 XboxOneControllerInjection This = (XboxOneControllerInjection)HookRuntimeInfo.Callback;
-
+                //TODO
                 lock (This.Queue)
                 {
                     if (This.Queue.Count < 1000)
@@ -367,7 +368,7 @@ namespace XboxOneController
             try
             {
                 XboxOneControllerInjection This = (XboxOneControllerInjection)HookRuntimeInfo.Callback;
-
+                //TODO
                 lock (This.Queue)
                 {
                     if (This.Queue.Count < 1000)
@@ -383,34 +384,37 @@ namespace XboxOneController
         [UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Unicode, SetLastError = true)]
         delegate uint DXInputGetKeystroke(int dwUserIndex, int dwReserved, out Keystroke pKeystroke);
         delegate void DXInputGetKeystrokeAsync(int dwUserIndex, int dwReserved, out Keystroke pKeystroke);
-        [DllImport("xinput1_3.dll", EntryPoint = "XInputGetKeystroke")]
-        static extern uint XInputGetKeystroke(int dwUserIndex, int dwReserved, out Keystroke pKeystroke);
 
         static uint XInputGetKeystroke_Hooked(int dwUserIndex, int dwReserved, out Keystroke pKeystroke)
         {
+            pKeystroke = new Keystroke();
             try
             {
+                ControllerReader myController = ControllerReader.Instance;
+                if (myController.controllers.Count < dwUserIndex)
+                    return ERROR_DEVICE_NOT_CONNECTED;
+
+                //TODO
+
                 XboxOneControllerInjection This = (XboxOneControllerInjection)HookRuntimeInfo.Callback;
 
                 lock (This.Queue)
                 {
                     if (This.Queue.Count < 1000)
-                        This.Queue.Push("XInputGetKeystrokeDelegate");
+                        This.Queue.Push("XInputGetKeystroke");
                 }
             }
             catch
             {
+                return ERROR_DEVICE_NOT_CONNECTED;
             }
-            return XInputGetKeystroke(dwUserIndex, dwReserved, out pKeystroke);
+            return ERROR_EMPTY;
         }
 
 
         [UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Unicode, SetLastError = true)]
         delegate uint DXInputGetBatteryInformation(int dwUserIndex, int devType, out BatteryInformation pBatteryInformation);
         delegate void DXInputGetBatteryInformationAsync(int dwUserIndex, int devType, out BatteryInformation pBatteryInformation);
-        [DllImport("xinput1_3.dll", EntryPoint = "XInputGetBatteryInformation")]
-        static extern uint XInputGetBatteryInformation(int dwUserIndex, int devType, out BatteryInformation pBatteryInformation);
-
         static uint XInputGetBatteryInformation_Hooked(int dwUserIndex, int devType, out BatteryInformation pBatteryInformation)
         {
             pBatteryInformation = new BatteryInformation();
@@ -436,18 +440,24 @@ namespace XboxOneController
             {
                 return ERROR_DEVICE_NOT_CONNECTED;
             }
-            return ERROR_SUCCES;
+            return ERROR_SUCCESS;
         }
 
         [UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Unicode, SetLastError = true)]
         delegate uint DXInputGetDSoundAudioDeviceGuids(int dwUserIndex, out Guid pDSoundRenderGuid, out Guid pDSoundCaptureGuid);
         delegate void DXInputGetDSoundAudioDeviceGuidsAsync(int dwUserIndex, out Guid pDSoundRenderGuid, out Guid pDSoundCaptureGuid);
-        [DllImport("xinput1_3.dll", EntryPoint = "XInputGetDSoundAudioDeviceGuids")]
-        static extern uint XInputGetDSoundAudioDeviceGuids(int dwUserIndex, out Guid pDSoundRenderGuid, out Guid pDSoundCaptureGuid);
         static uint XInputGetDSoundAudioDeviceGuids_Hooked(int dwUserIndex, out Guid pDSoundRenderGuid, out Guid pDSoundCaptureGuid)
         {
+            pDSoundRenderGuid = new Guid();
+            pDSoundCaptureGuid = new Guid();
+
             try
             {
+                ControllerReader myController = ControllerReader.Instance;
+
+                if (myController.controllers.Count < dwUserIndex)
+                    return ERROR_DEVICE_NOT_CONNECTED;
+                //TODO
                 XboxOneControllerInjection This = (XboxOneControllerInjection)HookRuntimeInfo.Callback;
 
                 lock (This.Queue)
@@ -458,19 +468,23 @@ namespace XboxOneController
             }
             catch
             {
+                return ERROR_DEVICE_NOT_CONNECTED;
             }
-            return XInputGetDSoundAudioDeviceGuids(dwUserIndex, out pDSoundRenderGuid, out pDSoundCaptureGuid);
+            return ERROR_SUCCESS;
         }
 
         [UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Unicode, SetLastError = true)]
         delegate uint DXInputEnable(bool enable);
         delegate void DXInputEnableAsync(bool enable);
-        [DllImport("xinput1_3.dll", EntryPoint = "XInputEnable")]
-        static extern uint XInputEnable(bool enable);
         static uint XInputEnable_Hooked(bool enable)
         {
             try
             {
+                Vibration resetVibration = new Vibration();
+
+                for (int x = 0; x < 4; ++x)
+                    XInputSetState_Hooked(x, ref resetVibration);
+
                 XboxOneControllerInjection This = (XboxOneControllerInjection)HookRuntimeInfo.Callback;
 
                 lock (This.Queue)
@@ -481,8 +495,9 @@ namespace XboxOneController
             }
             catch
             {
+                return ERROR_DEVICE_NOT_CONNECTED;
             }
-            return XInputEnable(enable);
+            return ERROR_SUCCESS;
         }
 
         [UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Unicode, SetLastError = true)]
@@ -531,7 +546,7 @@ namespace XboxOneController
             {
                 return ERROR_DEVICE_NOT_CONNECTED;
             }
-            return ERROR_SUCCES;
+            return ERROR_SUCCESS;
         }
     }
 }
