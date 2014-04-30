@@ -7,7 +7,6 @@ using System.Runtime.InteropServices;
 using EasyHook;
 using System.Reflection;
 using SharpDX;
-using SharpDX.Win32;
 using SharpDX.XInput;
 using XboxOnePadReader;
 
@@ -464,11 +463,11 @@ namespace XboxOneController
         }
 
         [UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Unicode, SetLastError = true)]
-        delegate uint DXInputEnable(Bool enable);
-        delegate void DXInputEnableAsync(Bool enable);
+        delegate uint DXInputEnable(bool enable);
+        delegate void DXInputEnableAsync(bool enable);
         [DllImport("xinput1_3.dll", EntryPoint = "XInputEnable")]
-        static extern uint XInputEnable(Bool enable);
-        static uint XInputEnable_Hooked(Bool enable)
+        static extern uint XInputEnable(bool enable);
+        static uint XInputEnable_Hooked(bool enable)
         {
             try
             {
